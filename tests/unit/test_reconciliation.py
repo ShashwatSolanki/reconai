@@ -28,7 +28,7 @@ def test_reconciliation_result_supports_missing_settlement() -> None:
     result = ReconciliationResult(
         transaction_id="pay_002",
         settlement_id=None,
-        status=ReconciliationStatus.MISSING_TRANSACTION,
+        status=ReconciliationStatus.MISSING_SETTLEMENT,
         expected_amount=Money(50000),
         actual_amount=None,
         difference=None,
@@ -38,7 +38,7 @@ def test_reconciliation_result_supports_missing_settlement() -> None:
     assert result.settlement_id is None
     assert result.actual_amount is None
     assert result.difference is None
-    assert result.status == ReconciliationStatus.MISSING_TRANSACTION
+    assert result.status == ReconciliationStatus.MISSING_SETTLEMENT
 
 
 def test_reconciliation_result_supports_amount_mismatch() -> None:
