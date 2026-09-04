@@ -232,6 +232,54 @@ Examples of invalid inputs may include:
 
 Validation errors should be distinguishable from reconciliation outcomes.
 
+## Synthetic Evaluation Dataset
+
+ReconAI includes a deterministic synthetic dataset generator for reproducible reconciliation testing and evaluation.
+
+The generator is implemented in `app/services/synthetic_data_generator.py` and produces at least 50 payment transactions and their candidate settlement records.
+
+### Reproducibility
+
+The generator accepts a configurable random seed:
+
+```python
+generator = SyntheticDataGenerator(seed=42)
+transactions, settlements = generator.generate()
+```
+
+Using the same seed produces the same transactions and settlements. This makes evaluation runs reproducible and allows reconciliation results to be compared across implementation changes.
+
+All monetary values continue to use integer minor units through the `Money` domain type.
+
+### Controlled Reconciliation Scenarios
+
+The first five generated transactions intentionally represent known reconciliation scenarios:
+
+| Transaction | Scenario                   |
+| :---------- | :------------------------- |
+| `pay_0001`  | Exact match                |
+| `pay_0002`  | Partial settlement         |
+| `pay_0003`  | Settlement amount mismatch |
+| `pay_0004`  | Missing settlement         |
+| `pay_0005`  | Duplicate settlement       |
+
+The remaining generated transactions are exact matches.
+
+These scenarios are deliberately deterministic rather than randomly injected. This provides a known ground truth for subsequent evaluation of the reconciliation engine and exception-management workflow.
+
+### Evaluation Purpose
+
+The synthetic dataset is intended to support:
+
+- Reconciliation accuracy measurement
+- Exception detection evaluation
+- Testing of missing and duplicate records
+- Testing of partial and amount-mismatch scenarios
+- Reproducible regression tests
+- Future measurement of throughput and operational impact
+
+The synthetic data does not represent real merchant or customer information. It is generated solely for development, testing, and evaluation.
+
 ---
 
 ## Testing Strategy
