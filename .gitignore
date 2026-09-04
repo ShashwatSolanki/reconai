@@ -216,3 +216,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+.DS_Store
+Thumbs.db
+data/raw
+data/processed/
