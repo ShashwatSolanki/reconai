@@ -10,7 +10,7 @@ class ReconciliationStatus(StrEnum):
     MATCHED = "matched"
     PARTIAL_MATCH = "partial_match"
     MISMATCH = "mismatch"
-    MISSING_SETTLEMENT = "MISSING_SETTLEMENT"
+    MISSING_SETTLEMENT = "missing_settlement"
     DUPLICATE = "duplicate"
     UNRESOLVED = "unresolved"
 
