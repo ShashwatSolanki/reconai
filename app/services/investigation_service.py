@@ -7,10 +7,11 @@ from app.domain.exception_investigation import (
     RootCauseCategory,
 )
 from app.domain.investigation_context import InvestigationContext
+from app.services.investigation_provider import InvestigationProvider
 
 
-class InvestigationService:
-    """Investigate financial exceptions using verified domain evidence."""
+class InvestigationService(InvestigationProvider):
+    """Deterministic investigation provider for tests and offline operation."""
 
     def investigate(self, context: InvestigationContext) -> InvestigationResult:
         """Produce a structured investigation result from exception context."""

@@ -2,10 +2,17 @@ from datetime import UTC, datetime
 
 import pytest
 
+from app.domain.exception_investigation import (
+    InvestigationRecommendation,
+    InvestigationResult,
+    RootCauseCategory,
+)
+from app.domain.investigation_context import InvestigationContext
 from app.domain.money import Money
 from app.domain.reconciliation import ReconciliationResult, ReconciliationStatus
 from app.domain.settlement import Settlement, SettlementStatus
 from app.domain.transaction import PaymentMethod, Transaction, TransactionStatus
+from app.services.investigation_provider import InvestigationProvider
 from app.services.reconai_service import ReconAIService
 
 
@@ -31,6 +38,23 @@ def make_settlement(amount: int = 9900) -> Settlement:
         transaction_reference="pay_001",
         status=SettlementStatus.SETTLED,
     )
+
+
+class RecordingInvestigationProvider(InvestigationProvider):
+    def __init__(self) -> None:
+        self.contexts = []
+
+    def investigate(self, context: InvestigationContext) -> InvestigationResult:
+        self.contexts.append(context)
+        return InvestigationResult(
+            exception_id=context.exception.exception_id,
+            root_cause=RootCauseCategory.PARTIAL_SETTLEMENT,
+            explanation="The supplied provider investigated the exception.",
+            evidence=["Provider received verified exception evidence."],
+            recommendation=InvestigationRecommendation.ACCEPT_SETTLEMENT,
+            confidence=0.95,
+            requires_human_review=False,
+        )
 
 
 def test_registers_exception_for_mismatch() -> None:
@@ -133,6 +157,34 @@ def test_investigation_runs_agent_decision_and_audit() -> None:
 
     assert audit_event.exception_id == exception.exception_id
     assert audit_event.executed is False
+
+
+def test_injected_provider_is_called_and_reaches_agent_decision() -> None:
+    transaction = make_transaction()
+    settlement = make_settlement(9900)
+    provider = RecordingInvestigationProvider()
+    service = ReconAIService(investigation_provider=provider)
+    result = ReconciliationResult(
+        transaction_id=transaction.transaction_id,
+        settlement_id=settlement.settlement_id,
+        status=ReconciliationStatus.PARTIAL_MATCH,
+        expected_amount=transaction.amount,
+        actual_amount=settlement.amount,
+        difference=Money(100),
+        reason="Settlement amount is lower than the transaction amount.",
+    )
+
+    exception = service.register_exception(result, transaction, settlement)
+
+    assert exception is not None
+    workflow = service.investigate(exception.exception_id)
+
+    assert provider.contexts == [service.contexts[exception.exception_id]]
+    assert workflow["investigation"].explanation == (
+        "The supplied provider investigated the exception."
+    )
+    assert workflow["decision"].action == "resolve"
+    assert workflow["action"].executed is True
 
 
 def test_missing_exception_cannot_be_investigated() -> None:

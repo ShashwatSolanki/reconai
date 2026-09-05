@@ -13,14 +13,18 @@ from app.domain.settlement import Settlement
 from app.domain.transaction import Transaction
 from app.services.agent_action import AgentActionResult, AgentActionService
 from app.services.agent_decision import AgentDecisionService
+from app.services.investigation_provider import InvestigationProvider
 from app.services.investigation_service import InvestigationService
 
 
 class ReconAIService:
     """Coordinate the end-to-end reconciliation exception workflow."""
 
-    def __init__(self) -> None:
-        self._investigator = InvestigationService()
+    def __init__(
+        self,
+        investigation_provider: InvestigationProvider | None = None,
+    ) -> None:
+        self._investigation_provider = investigation_provider or InvestigationService()
         self._decision_service = AgentDecisionService()
         self._action_service = AgentActionService()
 
@@ -90,7 +94,7 @@ class ReconAIService:
         if context is None:
             raise KeyError(f"Exception not found: {exception_id}")
 
-        investigation = self._investigator.investigate(context)
+        investigation = self._investigation_provider.investigate(context)
         decision = self._decision_service.decide(context, investigation)
         action = self._action_service.execute(context, decision)
 
