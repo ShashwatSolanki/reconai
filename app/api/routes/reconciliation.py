@@ -14,6 +14,7 @@ from app.domain.reconciliation import ReconciliationResult
 from app.domain.settlement import Settlement, SettlementStatus
 from app.domain.transaction import PaymentMethod, Transaction, TransactionStatus
 from app.services.batch_reconciliation import BatchReconciliationService
+from app.services.container import reconai_service
 from app.services.persisted_reconciliation import PersistedReconciliationService
 from app.services.reconciliation_engine import ReconciliationEngine
 
@@ -170,7 +171,30 @@ def reconcile(request: ReconciliationRequest) -> ReconciliationResponse:
         settlements=settlements,
     )
     summary = service.summarize(results)
+    settlement_by_id = {
+        settlement.settlement_id: settlement
+        for settlement in settlements
+    }
 
+    transaction_by_id = {
+        transaction.transaction_id: transaction
+        for transaction in transactions
+    }
+
+    for result in results:
+        transaction = transaction_by_id[result.transaction_id]
+
+        settlement = (
+            settlement_by_id[result.settlement_id]
+            if result.settlement_id is not None
+            else None
+        )
+
+        reconai_service.register_exception(
+            result=result,
+            transaction=transaction,
+            settlement=settlement,
+        )
     return ReconciliationResponse(
         results=[_to_result_response(result) for result in results],
         summary=ReconciliationSummaryResponse(

@@ -169,3 +169,21 @@ def test_agent_never_resolves_an_escalation_recommendation() -> None:
 
     assert decision.action == "escalate"
     assert decision.requires_human_review is True
+
+
+def test_agent_escalates_below_resolution_confidence_threshold() -> None:
+    from app.services.agent_decision import AgentDecisionService
+
+    service = AgentDecisionService()
+
+    decision = service.decide(
+        context=build_context(),
+        investigation=build_investigation(
+            recommendation=InvestigationRecommendation.ACCEPT_SETTLEMENT,
+            confidence=0.85,
+            requires_human_review=False,
+        ),
+    )
+
+    assert decision.action == "escalate"
+    assert decision.requires_human_review is True
