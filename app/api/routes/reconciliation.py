@@ -171,6 +171,14 @@ def reconcile(request: ReconciliationRequest) -> ReconciliationResponse:
         settlements=settlements,
     )
     summary = service.summarize(results)
+    reconai_service.record_reconciliation_summary(
+        total_transactions=summary.total_transactions,
+        matched=summary.matched,
+        partial_matches=summary.partial_matches,
+        mismatches=summary.mismatches,
+        missing_settlements=summary.missing_settlements,
+        duplicates=summary.duplicates,
+    )
     settlement_by_id = {
         settlement.settlement_id: settlement
         for settlement in settlements

@@ -27,7 +27,7 @@ class InvestigationService:
                 ),
                 evidence=[
                     f"Expected amount: {exception.expected_amount.amount} paise",
-                    f"Actual amount: {context.settlement.amount} paise"
+                    f"Actual amount: {context.settlement.amount.amount} paise"
                     if context.settlement is not None
                     else "Actual settlement amount is unavailable.",
                 ],

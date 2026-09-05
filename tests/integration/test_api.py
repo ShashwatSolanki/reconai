@@ -301,3 +301,25 @@ def test_exception_endpoints_return_404_for_unknown_exception() -> None:
     response = client.post("/exceptions/does_not_exist/investigate")
 
     assert response.status_code == 404
+
+
+def test_dashboard_data_endpoint_returns_control_tower_metrics() -> None:
+    response = client.get("/dashboard/data")
+
+    assert response.status_code == 200
+
+    data = response.json()
+
+    assert "metrics" in data
+    assert "exceptions" in data
+
+    assert set(data["metrics"]) == {
+        "total_transactions",
+        "matched",
+        "exceptions",
+        "amount_at_risk",
+        "auto_resolved",
+        "human_escalations",
+    }
+
+    assert isinstance(data["exceptions"], list)

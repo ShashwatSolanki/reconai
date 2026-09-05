@@ -28,7 +28,14 @@ class ReconAIService:
         self.contexts: dict[str, InvestigationContext] = {}
         self.investigations: dict[str, Any] = {}
         self.actions: dict[str, AgentActionResult] = {}
-
+        self.latest_reconciliation_summary: dict[str, int] = {
+            "total_transactions": 0,
+            "matched": 0,
+            "partial_matches": 0,
+            "mismatches": 0,
+            "missing_settlements": 0,
+            "duplicates": 0,
+        }
     def register_exception(
         self,
         result: ReconciliationResult,
@@ -110,3 +117,22 @@ class ReconAIService:
             return ExceptionSeverity.MEDIUM
 
         return ExceptionSeverity.HIGH
+
+    def record_reconciliation_summary(
+        self,
+        *,
+        total_transactions: int,
+        matched: int,
+        partial_matches: int,
+        mismatches: int,
+        missing_settlements: int,
+        duplicates: int,
+    ) -> None:
+        self.latest_reconciliation_summary = {
+            "total_transactions": total_transactions,
+            "matched": matched,
+            "partial_matches": partial_matches,
+            "mismatches": mismatches,
+            "missing_settlements": missing_settlements,
+            "duplicates": duplicates,
+        }
