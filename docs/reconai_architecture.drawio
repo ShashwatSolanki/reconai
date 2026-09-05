@@ -1,0 +1,73 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="ReconAI Architecture" id="qnN5oCNwiqaXqWgsJIqc">
+    <mxGraphModel dx="1717" dy="967" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="c4Lk_tRLUIvajW80y1Jr-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F1FF;strokeColor=#4C9AFF;strokeWidth=2;fontSize=15;fontColor=#172B4D;align=center;verticalAlign=middle;spacing=10;" value="&lt;b&gt;1. Input Data&lt;/b&gt;&lt;br&gt;&lt;br&gt;Transactions&lt;br&gt;Settlements&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;Synthetic benchmark: 100 records&lt;/font&gt;" vertex="1">
+          <mxGeometry height="180" width="210" x="50" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="c4Lk_tRLUIvajW80y1Jr-4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F7EE;strokeColor=#36B37E;strokeWidth=2;fontSize=14;fontColor=#172B4D;align=center;verticalAlign=middle;spacing=10;" value="&lt;b&gt;2. Schema Validation&lt;/b&gt;&lt;br&gt;&lt;br&gt;Typed domain models&lt;br&gt;Required-field validation&lt;br&gt;Currency / amount validation&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;Integer minor units&lt;/font&gt;" vertex="1">
+          <mxGeometry height="180" width="220" x="310" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="c4Lk_tRLUIvajW80y1Jr-5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF4D6;strokeColor=#FFAB00;strokeWidth=2;fontSize=13;fontColor=#172B4D;align=center;verticalAlign=middle;spacing=10;" value="&lt;b&gt;3. Deterministic Reconciliation Engine&lt;/b&gt;&lt;br&gt;&lt;br&gt;Match transactions ↔ settlements&lt;br&gt;Apply reference / amount / date rules&lt;br&gt;&lt;br&gt;&lt;b&gt;Classifies records:&lt;/b&gt;&lt;br&gt;MATCHED • PARTIAL • MISMATCH&lt;br&gt;MISSING • DUPLICATE • UNRESOLVED" vertex="1">
+          <mxGeometry height="220" width="270" x="580" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="c4Lk_tRLUIvajW80y1Jr-6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0E9FF;strokeColor=#7A5AF8;strokeWidth=2;fontSize=15;fontColor=#172B4D;align=center;verticalAlign=top;spacingTop=12;" value="&lt;b&gt;4. Exception Investigation&lt;/b&gt;&lt;br&gt;Only exceptions reach this layer" vertex="1">
+          <mxGeometry height="250" width="280" x="900" y="145" as="geometry" />
+        </mxCell>
+        <mxCell id="c4Lk_tRLUIvajW80y1Jr-7" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#B8A5FF;fontSize=12;fontColor=#172B4D;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;Mock Provider&lt;/b&gt;&lt;br&gt;(default)&lt;br&gt;&lt;br&gt;Deterministic&lt;br&gt;No external API&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;Used for reproducible evaluation&lt;/font&gt;" vertex="1">
+          <mxGeometry height="170" width="110" x="920" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="c4Lk_tRLUIvajW80y1Jr-8" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#B8A5FF;fontSize=12;fontColor=#172B4D;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;OpenAI Provider&lt;/b&gt;&lt;br&gt;(optional)&lt;br&gt;&lt;br&gt;LLM investigation&lt;br&gt;Evidence-based prompt&lt;br&gt;Configurable model&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;OPENAI_API_KEY&lt;/font&gt;" vertex="1">
+          <mxGeometry height="170" width="110" x="1050" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="c4Lk_tRLUIvajW80y1Jr-9" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF0F0;strokeColor=#FF5630;strokeWidth=2;fontSize=13;fontColor=#172B4D;align=center;verticalAlign=middle;spacing=10;" value="&lt;b&gt;5. Agent Decision + Safety Guardrails&lt;/b&gt;&lt;br&gt;&lt;br&gt;Deterministic policy checks&lt;br&gt;Accept-settlement recommendation&lt;br&gt;Confidence ≥ 90%&lt;br&gt;No human-review flag&lt;br&gt;Non-critical exception&lt;br&gt;&lt;br&gt;&lt;b&gt;AI cannot directly mutate financial records&lt;/b&gt;" vertex="1">
+          <mxGeometry height="220" width="270" x="1230" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="c4Lk_tRLUIvajW80y1Jr-10" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F7EE;strokeColor=#36B37E;strokeWidth=2;fontSize=13;fontColor=#172B4D;align=center;verticalAlign=middle;" value="&lt;b&gt;RESOLVE&lt;/b&gt;&lt;br&gt;&lt;br&gt;Automatic resolution&lt;br&gt;only when all safety conditions pass" vertex="1">
+          <mxGeometry height="110" width="180" x="1220" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="c4Lk_tRLUIvajW80y1Jr-11" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF0F0;strokeColor=#FF5630;strokeWidth=2;fontSize=13;fontColor=#172B4D;align=center;verticalAlign=middle;" value="&lt;b&gt;ESCALATE&lt;/b&gt;&lt;br&gt;&lt;br&gt;Human review required&lt;br&gt;for non-safe / uncertain cases" vertex="1">
+          <mxGeometry height="110" width="180" x="1430" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="c4Lk_tRLUIvajW80y1Jr-12" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0E9FF;strokeColor=#7A5AF8;strokeWidth=2;fontSize=14;fontColor=#172B4D;align=center;verticalAlign=middle;spacing=10;" value="&lt;b&gt;6. Audit Trail&lt;/b&gt;&lt;br&gt;&lt;br&gt;Investigation&lt;br&gt;Decision&lt;br&gt;Action&lt;br&gt;Reasoning + confidence + outcome&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;Full traceability&lt;/font&gt;" vertex="1">
+          <mxGeometry height="170" width="350" x="700" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="c4Lk_tRLUIvajW80y1Jr-13" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F6F7;strokeColor=#97A0AF;strokeWidth=2;fontSize=13;fontColor=#172B4D;align=center;verticalAlign=middle;spacing=10;" value="&lt;b&gt;7. Controller Evaluation&lt;/b&gt;&lt;br&gt;&lt;br&gt;100 synthetic records • seed = 42&lt;br&gt;96 matched • 4 exceptions&lt;br&gt;1 automatic resolution • 3 escalations&lt;br&gt;&lt;br&gt;&lt;b&gt;Status accuracy: 100%&lt;/b&gt;&lt;br&gt;&lt;b&gt;Exception precision: 100%&lt;/b&gt;&lt;br&gt;&lt;b&gt;Exception recall: 100%&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;Controlled synthetic benchmark — not production performance&lt;/font&gt;" vertex="1">
+          <mxGeometry height="145" width="1100" x="250" y="830" as="geometry" />
+        </mxCell>
+        <mxCell id="c4Lk_tRLUIvajW80y1Jr-14" edge="1" parent="1" source="c4Lk_tRLUIvajW80y1Jr-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;endArrow=block;endFill=1;" target="c4Lk_tRLUIvajW80y1Jr-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c4Lk_tRLUIvajW80y1Jr-15" edge="1" parent="1" source="c4Lk_tRLUIvajW80y1Jr-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;endArrow=block;endFill=1;" target="c4Lk_tRLUIvajW80y1Jr-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c4Lk_tRLUIvajW80y1Jr-16" edge="1" parent="1" source="c4Lk_tRLUIvajW80y1Jr-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;endArrow=block;endFill=1;fontSize=12;fontStyle=1;" target="c4Lk_tRLUIvajW80y1Jr-6" value="exceptions only">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c4Lk_tRLUIvajW80y1Jr-17" edge="1" parent="1" source="c4Lk_tRLUIvajW80y1Jr-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;endArrow=block;endFill=1;" target="c4Lk_tRLUIvajW80y1Jr-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c4Lk_tRLUIvajW80y1Jr-18" edge="1" parent="1" source="c4Lk_tRLUIvajW80y1Jr-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;endArrow=block;endFill=1;fontSize=12;" target="c4Lk_tRLUIvajW80y1Jr-10" value="safe">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c4Lk_tRLUIvajW80y1Jr-19" edge="1" parent="1" source="c4Lk_tRLUIvajW80y1Jr-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;endArrow=block;endFill=1;fontSize=12;" target="c4Lk_tRLUIvajW80y1Jr-11" value="otherwise">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c4Lk_tRLUIvajW80y1Jr-20" edge="1" parent="1" source="c4Lk_tRLUIvajW80y1Jr-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;dashed=1;endArrow=block;endFill=1;fontSize=11;strokeColor=#7A5AF8;" target="c4Lk_tRLUIvajW80y1Jr-12" value="audit">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c4Lk_tRLUIvajW80y1Jr-21" edge="1" parent="1" source="c4Lk_tRLUIvajW80y1Jr-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;dashed=1;endArrow=block;endFill=1;fontSize=11;strokeColor=#7A5AF8;" target="c4Lk_tRLUIvajW80y1Jr-12" value="audit">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c4Lk_tRLUIvajW80y1Jr-22" edge="1" parent="1" source="c4Lk_tRLUIvajW80y1Jr-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;dashed=1;endArrow=block;endFill=1;fontSize=11;strokeColor=#5E6C84;" target="c4Lk_tRLUIvajW80y1Jr-13" value="measured benchmark">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c4Lk_tRLUIvajW80y1Jr-23" edge="1" parent="1" source="c4Lk_tRLUIvajW80y1Jr-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;endArrow=none;strokeColor=#B8A5FF;" target="c4Lk_tRLUIvajW80y1Jr-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
