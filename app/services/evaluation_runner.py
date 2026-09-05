@@ -16,6 +16,8 @@ from app.services.synthetic_data_generator import SyntheticDataGenerator
 class EvaluationRunResult:
     """Complete output produced by one evaluation run."""
 
+    seed: int
+    record_count: int
     total_transactions: int
     total_settlements: int
     ground_truth: list[GroundTruth]
@@ -31,6 +33,8 @@ class EvaluationRunner:
         seed: int = 42,
         record_count: int = 100,
     ) -> None:
+        self._seed = seed
+        self._record_count = record_count
         self._synthetic_generator = SyntheticDataGenerator(
             seed=seed,
             record_count=record_count,
@@ -62,6 +66,8 @@ class EvaluationRunner:
         )
 
         return EvaluationRunResult(
+            seed=self._seed,
+            record_count=self._record_count,
             total_transactions=len(transactions),
             total_settlements=len(settlements),
             ground_truth=ground_truth,

@@ -145,3 +145,15 @@ The evaluation layer can be extended with:
 - Before/after operational metrics
 
 _These metrics should be added only when the underlying data and evaluation methodology support them._
+
+A reproducible evaluation report is generated at `reports/evaluation.md`.
+
+Generate it with:
+
+```bash
+python scripts/run_evaluation.py
+```
+
+The report uses the canonical evaluation configuration of seed `42` and 100 synthetic records. It contains the measured reconciliation outcome counts and evaluation metrics produced by the evaluation pipeline.
+
+The generated report intentionally does not include timestamps or other nondeterministic values so that repeated runs with the same configuration produce stable output.
