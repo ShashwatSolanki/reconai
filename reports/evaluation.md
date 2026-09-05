@@ -1,37 +1,30 @@
-# ReconAI Evaluation Report
-
-## Methodology
-
-This report contains measured results from ReconAI's deterministic
-evaluation pipeline.
-
-- Dataset: **Controlled synthetic dataset**
-- Seed: `42`
-- Record count: `100`
-
-The evaluation ground truth is generated from known transaction and
-settlement relationships in the controlled synthetic dataset. These
-results must not be interpreted as independently labeled production
-performance.
+# ReconAI - Finance Controller Evaluation
 
 ## Dataset
 
-| Metric | Value |
-|---|---:|
-| Transactions | 100 |
-| Settlements | 100 |
+- Records: `100`
+- Seed: `42`
+- Data: controlled synthetic records with known ground truth
 
-## Reconciliation Outcomes
+## Reconciliation
 
-| Status | Count |
+| Metric | Result |
 |---|---:|
 | Matched | 96 |
-| Partial match | 1 |
-| Mismatch | 1 |
-| Missing settlement | 1 |
-| Duplicate | 1 |
+| Exceptions | 4 |
+| Match rate | 96.00% |
 
-## Evaluation Metrics
+## Exception Handling
+
+| Metric | Result |
+|---|---:|
+| Investigated | 4 |
+| Automatically resolved | 1 |
+| Escalated to human review | 3 |
+| Without a final outcome | 0 |
+| Average investigation confidence | 62.25% |
+
+## Verified Evaluation
 
 | Metric | Result |
 |---|---:|
@@ -39,24 +32,33 @@ performance.
 | Exception precision | 100.00% |
 | Exception recall | 100.00% |
 
-### Metric Counts
+## Performance
 
-- Correct status predictions: `100`
-- Actual exceptions: `4`
-- Predicted exceptions: `4`
-- True-positive exceptions: `4`
+| Metric | Result |
+|---|---:|
+| Processing time | 0.0019 seconds |
+| Throughput | 52471.40 records/second |
 
-## Interpretation
+## Exception Breakdown
 
-The reported metrics describe performance on the controlled synthetic
-evaluation dataset only. The dataset contains deliberately injected
-reconciliation scenarios and is intended to validate deterministic
-reconciliation behavior and evaluation correctness.
+| Category | Count |
+|---|---:|
+| Amount Mismatch | 1 |
+| Missing Settlement | 1 |
+| Duplicate Settlement | 1 |
+| Partial Settlement | 1 |
 
-It should not be used as evidence of production accuracy.
+## Exceptions Requiring Human Review
 
-## Reproducibility
+| Exception ID | Category | Difference (paise) | Reason | Action |
+|---|---|---:|---|---|
+| exc_pay_0003 | amount_mismatch | 2000 | Human review is required before execution. | ESCALATED |
+| exc_pay_0004 | missing_settlement | N/A | Human review is required before execution. | ESCALATED |
+| exc_pay_0005 | duplicate_settlement | N/A | Human review is required before execution. | ESCALATED |
 
-The evaluation is deterministic when run with the same seed and record
-count. Re-running the pipeline with the same configuration produces the
-same ground truth, reconciliation results, and metrics.
+## Limitations
+
+This evaluation uses controlled synthetic data and deterministic ground truth.
+It demonstrates pipeline correctness and measured local benchmark behavior, not
+production accuracy or production throughput. Escalated exceptions have a final
+safe routing outcome, but remain pending human review.
