@@ -56,3 +56,39 @@ def test_repository_rejects_duplicate_event_id() -> None:
 
     with pytest.raises(ValueError, match="already exists"):
         repository.save(duplicate)
+
+
+def test_repository_returns_audit_events_for_exception() -> None:
+    from app.repositories.audit_event_repository import AuditEventRepository
+
+    repository = AuditEventRepository()
+
+    first_event = build_event()
+
+    second_event = AuditEvent(
+        event_id="audit_0002",
+        exception_id=first_event.exception_id,
+        action="escalate",
+        actor="agent",
+        reason="Human review required.",
+        executed=False,
+        timestamp=datetime(2026, 9, 5, 11, 0, tzinfo=UTC),
+    )
+
+    unrelated_event = AuditEvent(
+        event_id="audit_0003",
+        exception_id="exc_0002",
+        action="resolve",
+        actor="agent",
+        reason="Unrelated exception.",
+        executed=True,
+        timestamp=datetime(2026, 9, 5, 12, 0, tzinfo=UTC),
+    )
+
+    repository.save(first_event)
+    repository.save(second_event)
+    repository.save(unrelated_event)
+
+    events = repository.get_by_exception(first_event.exception_id)
+
+    assert events == [first_event, second_event]

@@ -19,3 +19,11 @@ class AuditEventRepository:
     def get(self, event_id: str) -> AuditEvent | None:
         """Return an audit event by ID, or None when it does not exist."""
         return self._events.get(event_id)
+
+    def get_by_exception(self, exception_id: str) -> list[AuditEvent]:
+        """Return all audit events associated with an exception."""
+        return [
+            event
+            for event in self._events.values()
+            if event.exception_id == exception_id
+        ]
