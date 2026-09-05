@@ -1,32 +1,31 @@
 # ReconAI
 
-ReconAI is an AI-powered financial reconciliation and exception management system.
+ReconAI is an AI Finance Controller for reconciliation. It processes 100 synthetic transactions, matches settlements, investigates only exceptions, safely resolves high-confidence cases, and audits every agent action.
 
-## Objective
+## Architecture
 
-ReconAI automates the reconciliation of financial transactions against settlement and banking records, identifies discrepancies, investigates their causes, recommends resolutions, and escalates uncertain cases.
+```text
+Transactions -> deterministic reconciliation -> exceptions -> AI/mock investigation
+             -> agent guardrails -> resolve or escalate -> audit + report
+```
 
-## Core Goals
+The LLM is never used for ordinary matching and cannot modify financial records.
 
-- Deterministic financial reconciliation
-- AI-assisted exception investigation
-- Safe agentic resolution workflows
-- Human escalation for uncertain cases
-- Complete auditability
-- Reproducible evaluation
-- Measurable operational impact
+## Verified evaluation
 
-## Engineering Principles
+The committed controller run (`seed=42`) measured 100 records, 96 matches, 4 exceptions, 1 safe automatic resolution, and 3 escalations. Status accuracy, exception precision, and exception recall were each 100% on controlled synthetic data. See [the generated report](reports/evaluation.md).
 
-- Deterministic logic for deterministic problems
-- AI only where it provides meaningful value
-- Test-driven development
-- Strong typing and validation
-- Explicit domain boundaries
-- Reproducible evaluation
-- Auditability by design
-- Secure and failure-aware automation
+## Run locally
 
-## Status
+```bash
+python scripts/run_controller_evaluation.py
+pytest -q
+ruff check .
+mypy app
+```
 
-🚧 Early development
+Use `INVESTIGATION_PROVIDER=mock` for deterministic runs. To use OpenAI, set `INVESTIGATION_PROVIDER=openai`, `OPENAI_API_KEY`, and optionally `OPENAI_MODEL`.
+
+## Safety and limitations
+
+Automatic resolution requires an accept-settlement recommendation, no human-review flag, and at least 90% confidence. All other cases are escalated and audited. This is a synthetic benchmark, not a production accuracy or throughput claim.
