@@ -11,6 +11,9 @@ class AuditEventRepository:
 
     def save(self, event: AuditEvent) -> None:
         """Store an audit event by its unique event ID."""
+        if event.event_id in self._events:
+            raise ValueError(f"Audit event already exists: {event.event_id}")
+
         self._events[event.event_id] = event
 
     def get(self, event_id: str) -> AuditEvent | None:

@@ -1,5 +1,7 @@
 from datetime import UTC, datetime
 
+import pytest
+
 from app.domain.audit_event import AuditEvent
 
 
@@ -32,3 +34,25 @@ def test_repository_returns_none_for_unknown_event() -> None:
     repository = AuditEventRepository()
 
     assert repository.get("does_not_exist") is None
+
+
+def test_repository_rejects_duplicate_event_id() -> None:
+    from app.repositories.audit_event_repository import AuditEventRepository
+
+    repository = AuditEventRepository()
+
+    event = build_event()
+    repository.save(event)
+
+    duplicate = AuditEvent(
+        event_id=event.event_id,
+        exception_id="exc_0002",
+        action="escalate",
+        actor="agent",
+        reason="Duplicate event test.",
+        executed=False,
+        timestamp=datetime(2026, 9, 5, 11, 0, tzinfo=UTC),
+    )
+
+    with pytest.raises(ValueError, match="already exists"):
+        repository.save(duplicate)
