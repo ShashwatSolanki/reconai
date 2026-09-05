@@ -36,8 +36,8 @@
 
 | Metric | Result |
 |---|---:|
-| Processing time | 0.0019 seconds |
-| Throughput | 52471.40 records/second |
+| Processing time | 0.0021 seconds |
+| Throughput | 48213.68 records/second |
 
 ## Exception Breakdown
 
