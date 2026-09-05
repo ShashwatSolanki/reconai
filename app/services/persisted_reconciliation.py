@@ -1,9 +1,26 @@
 from __future__ import annotations
 
+from typing import Protocol
+
+from app.domain.batch_reconciliation import BatchReconciliationSummary
 from app.domain.reconciliation import ReconciliationResult
-from app.repositories.settlement_repository import SettlementRepository
-from app.repositories.transaction_repository import TransactionRepository
+from app.domain.settlement import Settlement
+from app.domain.transaction import Transaction
 from app.services.batch_reconciliation import BatchReconciliationService
+
+
+class TransactionRepositoryProtocol(Protocol):
+    """Repository contract required by persisted reconciliation."""
+
+    def get_by_merchant(self, merchant_id: str) -> list[Transaction]:
+        ...
+
+
+class SettlementRepositoryProtocol(Protocol):
+    """Repository contract required by persisted reconciliation."""
+
+    def get_by_merchant(self, merchant_id: str) -> list[Settlement]:
+        ...
 
 
 class PersistedReconciliationService:
@@ -11,8 +28,8 @@ class PersistedReconciliationService:
 
     def __init__(
         self,
-        transaction_repository: TransactionRepository,
-        settlement_repository: SettlementRepository,
+        transaction_repository: TransactionRepositoryProtocol,
+        settlement_repository: SettlementRepositoryProtocol,
         reconciliation_service: BatchReconciliationService,
     ) -> None:
         self._transaction_repository = transaction_repository
@@ -27,3 +44,9 @@ class PersistedReconciliationService:
             transactions=transactions,
             settlements=settlements,
         )
+
+    def summarize(
+        self,
+        results: list[ReconciliationResult],
+    ) -> BatchReconciliationSummary:
+        return self._reconciliation_service.summarize(results)

@@ -2,14 +2,19 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel, Field, field_validator
+from sqlalchemy.orm import Session
 
+from app.api.dependencies import get_db
+from app.db.repositories.settlement import SqlAlchemySettlementRepository
+from app.db.repositories.transaction import SqlAlchemyTransactionRepository
 from app.domain.money import Money
 from app.domain.reconciliation import ReconciliationResult
 from app.domain.settlement import Settlement, SettlementStatus
 from app.domain.transaction import PaymentMethod, Transaction, TransactionStatus
 from app.services.batch_reconciliation import BatchReconciliationService
+from app.services.persisted_reconciliation import PersistedReconciliationService
 from app.services.reconciliation_engine import ReconciliationEngine
 
 router = APIRouter(prefix="/reconciliation", tags=["reconciliation"])
@@ -164,6 +169,38 @@ def reconcile(request: ReconciliationRequest) -> ReconciliationResponse:
         transactions=transactions,
         settlements=settlements,
     )
+    summary = service.summarize(results)
+
+    return ReconciliationResponse(
+        results=[_to_result_response(result) for result in results],
+        summary=ReconciliationSummaryResponse(
+            total_transactions=summary.total_transactions,
+            matched=summary.matched,
+            partial_matches=summary.partial_matches,
+            mismatches=summary.mismatches,
+            missing_settlements=summary.missing_settlements,
+            duplicates=summary.duplicates,
+        ),
+    )
+
+
+@router.post("/merchants/{merchant_id}", response_model=ReconciliationResponse)
+def reconcile_persisted_merchant(
+    merchant_id: str,
+    db: Session = Depends(get_db),  # noqa: B008
+) -> ReconciliationResponse:
+    transaction_repository = SqlAlchemyTransactionRepository(db)
+    settlement_repository = SqlAlchemySettlementRepository(db)
+
+    service = PersistedReconciliationService(
+        transaction_repository=transaction_repository,
+        settlement_repository=settlement_repository,
+        reconciliation_service=BatchReconciliationService(
+            engine=ReconciliationEngine()
+        ),
+    )
+
+    results = service.reconcile_merchant(merchant_id)
     summary = service.summarize(results)
 
     return ReconciliationResponse(
