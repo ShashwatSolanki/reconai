@@ -3,6 +3,7 @@ from datetime import UTC, datetime
 import pytest
 
 from app.domain.agent_decision import AgentDecision
+from app.domain.audit_event import AuditEvent
 from app.domain.exception import ExceptionCategory, ExceptionSeverity, FinancialException
 from app.domain.investigation_context import InvestigationContext
 from app.domain.money import Money
@@ -133,3 +134,48 @@ def test_executor_does_not_execute_when_human_review_is_required() -> None:
     assert result.action == "escalate"
     assert result.executed is False
     assert result.requires_human_review is True
+
+
+def test_executor_emits_audit_event_for_resolve() -> None:
+    from app.services.agent_action import AgentActionService
+
+    timestamp = datetime(2026, 9, 5, 10, 0, tzinfo=UTC)
+    service = AgentActionService(
+        clock=lambda: timestamp,
+        event_id_factory=lambda: "audit_0001",
+    )
+
+    result = service.execute(
+        context=build_context(),
+        decision=build_decision("resolve"),
+    )
+
+    assert isinstance(result.audit_event, AuditEvent)
+    assert result.audit_event.event_id == "audit_0001"
+    assert result.audit_event.exception_id == "exc_0001"
+    assert result.audit_event.action == "resolve"
+    assert result.audit_event.actor == "agent"
+    assert result.audit_event.executed is True
+    assert result.audit_event.timestamp == timestamp
+
+
+def test_executor_emits_audit_event_for_escalation() -> None:
+    from app.services.agent_action import AgentActionService
+
+    timestamp = datetime(2026, 9, 5, 10, 0, tzinfo=UTC)
+    service = AgentActionService(
+        clock=lambda: timestamp,
+        event_id_factory=lambda: "audit_0002",
+    )
+
+    result = service.execute(
+        context=build_context(),
+        decision=build_decision("escalate", requires_human_review=True),
+    )
+
+    assert result.audit_event.event_id == "audit_0002"
+    assert result.audit_event.exception_id == "exc_0001"
+    assert result.audit_event.action == "escalate"
+    assert result.audit_event.actor == "agent"
+    assert result.audit_event.executed is False
+    assert result.audit_event.timestamp == timestamp
