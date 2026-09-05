@@ -1,22 +1,12 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
-
+from app.domain.agent_decision import AgentDecision
 from app.domain.exception import ExceptionSeverity
 from app.domain.exception_investigation import (
     InvestigationRecommendation,
     InvestigationResult,
 )
 from app.domain.investigation_context import InvestigationContext
-
-
-@dataclass(frozen=True, slots=True)
-class AgentDecision:
-    """Bounded action selected from an investigation result."""
-
-    action: str
-    requires_human_review: bool
-    reason: str
 
 
 class AgentDecisionService:
