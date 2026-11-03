@@ -1,5 +1,14 @@
 # ReconAI
 
+<div align="center">
+
+  <img src="https://raw.githubusercontent.com/ShashwatSolanki/ShashwatSolanki/main/assets/recon-ai-1.png" alt="ReconAI interface preview" width="920" />
+
+  [![CI](https://github.com/ShashwatSolanki/reconai/actions/workflows/ci.yml/badge.svg)](https://github.com/ShashwatSolanki/reconai/actions/workflows/ci.yml)
+  <a href="https://shashwatsolanki.github.io/ShashwatSolanki/#work">Portfolio preview &amp; project overview</a>
+
+</div>
+
 ReconAI is an AI Finance Controller for automated financial reconciliation and exception management.
 
 It processes payment transactions and settlement records, performs deterministic reconciliation, investigates only unresolved exceptions, applies safety guardrails before any automated action, and maintains an audit trail for agent decisions.
