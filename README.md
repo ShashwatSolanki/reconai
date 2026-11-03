@@ -2,7 +2,7 @@
 
 <div align="center">
 
-  <img src="https://raw.githubusercontent.com/ShashwatSolanki/ShashwatSolanki/main/assets/recon-ai-1.png" alt="ReconAI interface preview" width="920" />
+  <img src="https://raw.githubusercontent.com/ShashwatSolanki/ShashwatSolanki/main/assets/recon-ai-1.png" alt="ReconAI project screenshot" width="920" />
 
   [![CI](https://github.com/ShashwatSolanki/reconai/actions/workflows/ci.yml/badge.svg)](https://github.com/ShashwatSolanki/reconai/actions/workflows/ci.yml)
   <a href="https://shashwatsolanki.github.io/ShashwatSolanki/#work">Portfolio preview &amp; project overview</a>
